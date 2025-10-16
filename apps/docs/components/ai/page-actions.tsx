@@ -2,23 +2,11 @@
 
 import { useMemo, useState } from "react";
 
-import {
-  Check,
-  ChevronDown,
-  Copy,
-  ExternalLink,
-  MessageCircle,
-} from "lucide-react";
+import { Check, Copy, ExternalLink, MessageCircle, Pencil } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { useCopyButton } from "fumadocs-ui/utils/use-copy-button";
 import { buttonVariants } from "@/components/ui/button";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "fumadocs-ui/components/ui/popover";
-import { cva } from "class-variance-authority";
 
 const cache = new Map<string, string>();
 
@@ -31,23 +19,21 @@ export function LLMCopyButton({
   markdownUrl: string;
 }) {
   const [isLoading, setLoading] = useState(false);
+
   const [checked, onClick] = useCopyButton(async () => {
-    const cached = cache.get(markdownUrl);
-    if (cached) return navigator.clipboard.writeText(cached);
-
     setLoading(true);
-
     try {
-      await navigator.clipboard.write([
-        new ClipboardItem({
-          "text/plain": fetch(markdownUrl).then(async (res) => {
-            const content = await res.text();
-            cache.set(markdownUrl, content);
-
-            return content;
-          }),
-        }),
-      ]);
+      let content = cache.get(markdownUrl);
+      if (!content) {
+        const res = await fetch(markdownUrl);
+        if (!res.ok) throw new Error(`Failed to fetch markdown: ${res.status}`);
+        content = await res.text();
+        cache.set(markdownUrl, content);
+      }
+      await navigator.clipboard.writeText(content);
+    } catch (err) {
+      console.error("Failed to copy markdown:", err);
+      throw err; // Re-throw for correct visual feedback
     } finally {
       setLoading(false);
     }
@@ -60,7 +46,7 @@ export function LLMCopyButton({
         buttonVariants({
           variant: "secondary",
           size: "sm",
-          className: "gap-2 [&_svg]:size-3.5 [&_svg]:text-fd-muted-foreground",
+          className: "gap-1.5 text-xs justify-start [&_svg]:size-3 [&_svg]:text-fd-muted-foreground",
         }),
       )}
       onClick={onClick}
@@ -73,13 +59,10 @@ export function LLMCopyButton({
   );
 }
 
-const optionVariants = cva(
-  "text-sm p-2 rounded-lg inline-flex items-center gap-2 hover:text-fd-accent-foreground hover:bg-fd-accent [&_svg]:size-4",
-);
-
-export function ViewOptions({
+export function AIActions({
   markdownUrl,
   githubUrl,
+  githubEditUrl,
 }: {
   /**
    * A URL to the raw Markdown/MDX content of page
@@ -90,12 +73,17 @@ export function ViewOptions({
    * Source file URL on GitHub
    */
   githubUrl: string;
+
+  /**
+   * GitHub edit URL
+   */
+  githubEditUrl: string;
 }) {
   const items = useMemo(() => {
-    const fullMarkdownUrl =
-      typeof window !== "undefined"
-        ? new URL(markdownUrl, window.location.origin)
-        : "loading";
+    // Don't build URLs during SSR to avoid hydration mismatches
+    if (typeof window === "undefined") return [];
+
+    const fullMarkdownUrl = new URL(markdownUrl, window.location.origin);
     const q = `Read ${fullMarkdownUrl}, I want to ask questions about it.`;
 
     return [
@@ -209,44 +197,59 @@ export function ViewOptions({
         ),
       },
       {
+        title: "Open in Cursor",
+        href: `https://cursor.com/link/prompt?${new URLSearchParams({
+          text: q,
+        })}`,
+        icon: (
+          <svg
+            role="img"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <title>Cursor</title>
+            <path d="M0 12a12 12 0 1 0 24 0 12 12 0 1 0-24 0Zm7.2-4.8h9.6v9.6H7.2Z" />
+          </svg>
+        ),
+      },
+      {
         title: "Open in T3 Chat",
         href: `https://t3.chat/new?${new URLSearchParams({
           q,
         })}`,
         icon: <MessageCircle />,
       },
+      {
+        title: "Edit on GitHub",
+        href: githubEditUrl,
+        icon: <Pencil />,
+      },
     ];
-  }, [githubUrl, markdownUrl]);
+  }, [githubUrl, githubEditUrl, markdownUrl]);
 
   return (
-    <Popover>
-      <PopoverTrigger
-        className={cn(
-          buttonVariants({
-            variant: "secondary",
-            size: "sm",
-            className: "gap-2",
-          }),
-        )}
-      >
-        Open
-        <ChevronDown className="size-3.5 text-fd-muted-foreground" />
-      </PopoverTrigger>
-      <PopoverContent className="flex flex-col overflow-auto">
-        {items.map((item) => (
-          <a
-            key={item.href}
-            href={item.href}
-            rel="noreferrer noopener"
-            target="_blank"
-            className={cn(optionVariants())}
-          >
-            {item.icon}
-            {item.title}
-            <ExternalLink className="ms-auto size-3.5 text-fd-muted-foreground" />
-          </a>
-        ))}
-      </PopoverContent>
-    </Popover>
+    <>
+      {items.map((item) => (
+        <a
+          key={item.href}
+          href={item.href}
+          rel="noreferrer noopener"
+          target="_blank"
+          className={cn(
+            buttonVariants({
+              variant: "secondary",
+              size: "sm",
+              className:
+                "gap-1.5 text-xs justify-start [&_svg]:size-3 [&_svg]:shrink-0",
+            }),
+          )}
+        >
+          <span className="[&_svg]:size-3 [&_svg]:shrink-0">{item.icon}</span>
+          <span className="flex-1 text-left">{item.title}</span>
+          <ExternalLink className="size-3 text-fd-muted-foreground shrink-0" />
+        </a>
+      ))}
+    </>
   );
 }
