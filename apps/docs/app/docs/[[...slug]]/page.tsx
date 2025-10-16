@@ -57,7 +57,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata(props: {
   params: Promise<{ slug?: string[] }>;
-}) {
+}): Promise<Metadata> {
   const params = await props.params;
   const page = getPage(params.slug ?? []);
 
@@ -66,5 +66,5 @@ export async function generateMetadata(props: {
   return {
     title: page.data.title,
     description: page.data.description ?? null,
-  } satisfies Metadata;
+  };
 }
