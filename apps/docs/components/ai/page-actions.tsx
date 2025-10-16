@@ -46,7 +46,8 @@ export function LLMCopyButton({
         buttonVariants({
           variant: "secondary",
           size: "sm",
-          className: "gap-1.5 text-xs justify-start [&_svg]:size-3 [&_svg]:text-fd-muted-foreground",
+          className:
+            "justify-start gap-1.5 text-xs [&_svg]:size-3 [&_svg]:text-fd-muted-foreground",
         }),
       )}
       onClick={onClick}
@@ -241,13 +242,13 @@ export function AIActions({
               variant: "secondary",
               size: "sm",
               className:
-                "gap-1.5 text-xs justify-start [&_svg]:size-3 [&_svg]:shrink-0",
+                "justify-start gap-1.5 text-xs [&_svg]:size-3 [&_svg]:shrink-0",
             }),
           )}
         >
           <span className="[&_svg]:size-3 [&_svg]:shrink-0">{item.icon}</span>
           <span className="flex-1 text-left">{item.title}</span>
-          <ExternalLink className="size-3 text-fd-muted-foreground shrink-0" />
+          <ExternalLink className="size-3 shrink-0 text-fd-muted-foreground" />
         </a>
       ))}
     </>
