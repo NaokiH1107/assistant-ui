@@ -21,7 +21,7 @@ export default async function Page(props: {
   const githubUrl = `https://github.com/assistant-ui/assistant-ui/blob/main/${path}`;
   const githubEditUrl = `https://github.com/assistant-ui/assistant-ui/edit/main/${path}`;
   const footer = (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-1.5">
       <LLMCopyButton markdownUrl={markdownUrl} />
       <AIActions
         markdownUrl={markdownUrl}

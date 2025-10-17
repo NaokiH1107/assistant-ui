@@ -1,24 +1,43 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { Check, Copy, ExternalLink, MessageCircle, Pencil } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { useCopyButton } from "fumadocs-ui/utils/use-copy-button";
-import { buttonVariants } from "@/components/ui/button";
+
+const docsActionClasses =
+  "group inline-flex items-center gap-1.5 rounded-md pl-3 pr-2 py-1 text-xs font-medium text-fd-muted-foreground transition-colors duration-150 ease-out hover:text-fd-foreground hover:bg-fd-accent/10 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-fd-border/60 focus-visible:ring-offset-1 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50";
+
+const docsActionIconClasses =
+  "inline-flex items-center text-fd-muted-foreground transition-colors duration-150 ease-out group-hover:text-fd-foreground group-focus-visible:text-fd-foreground [&_svg]:size-3 [&_svg]:shrink-0";
 
 const cache = new Map<string, string>();
 
-export function LLMCopyButton({
-  markdownUrl,
-}: {
-  /**
-   * A URL to fetch the raw Markdown/MDX content of page
-   */
-  markdownUrl: string;
-}) {
+export function LLMCopyButton({ markdownUrl }: { markdownUrl: string }) {
   const [isLoading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (cache.has(markdownUrl)) return;
+
+    let cancelled = false;
+
+    void (async () => {
+      try {
+        const res = await fetch(markdownUrl);
+        if (!res.ok) return;
+        const content = await res.text();
+        if (!cancelled) cache.set(markdownUrl, content);
+      } catch {
+        /* noop */
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [markdownUrl]);
 
   const [checked, onClick] = useCopyButton(async () => {
     setLoading(true);
@@ -33,7 +52,7 @@ export function LLMCopyButton({
       await navigator.clipboard.writeText(content);
     } catch (err) {
       console.error("Failed to copy markdown:", err);
-      throw err; // Re-throw for correct visual feedback
+      throw err;
     } finally {
       setLoading(false);
     }
@@ -42,20 +61,20 @@ export function LLMCopyButton({
   return (
     <button
       disabled={isLoading}
-      className={cn(
-        buttonVariants({
-          variant: "secondary",
-          size: "sm",
-          className:
-            "justify-start gap-1.5 text-xs [&_svg]:size-3 [&_svg]:text-fd-muted-foreground",
-        }),
-      )}
+      className={cn(docsActionClasses, "justify-start self-start")}
       onClick={onClick}
       aria-label="Copy Markdown"
       title="Copy Markdown"
     >
-      {checked ? <Check /> : <Copy />}
-      Copy Markdown
+      <span className="inline-flex items-center gap-1 text-left">
+        <span className={docsActionIconClasses}>
+          {checked ? <Check /> : <Copy />}
+        </span>
+        <span>Copy Markdown</span>
+      </span>
+      <span aria-live="polite" className="sr-only">
+        {checked ? "Markdown copied" : ""}
+      </span>
     </button>
   );
 }
@@ -65,27 +84,12 @@ export function AIActions({
   githubUrl,
   githubEditUrl,
 }: {
-  /**
-   * A URL to the raw Markdown/MDX content of page
-   */
   markdownUrl: string;
-
-  /**
-   * Source file URL on GitHub
-   */
   githubUrl: string;
-
-  /**
-   * GitHub edit URL
-   */
   githubEditUrl: string;
 }) {
   const items = useMemo(() => {
-    // Don't build URLs during SSR to avoid hydration mismatches
-    if (typeof window === "undefined") return [];
-
-    const fullMarkdownUrl = new URL(markdownUrl, window.location.origin);
-    const q = `Read ${fullMarkdownUrl}, I want to ask questions about it.`;
+    const q = `Read https://assistant-ui.com${markdownUrl}, I want to ask questions about it.`;
 
     return [
       {
@@ -237,18 +241,17 @@ export function AIActions({
           href={item.href}
           rel="noreferrer noopener"
           target="_blank"
-          className={cn(
-            buttonVariants({
-              variant: "secondary",
-              size: "sm",
-              className:
-                "justify-start gap-1.5 text-xs [&_svg]:size-3 [&_svg]:shrink-0",
-            }),
-          )}
+          className={cn(docsActionClasses, "justify-start self-start")}
         >
-          <span className="[&_svg]:size-3 [&_svg]:shrink-0">{item.icon}</span>
-          <span className="flex-1 text-left">{item.title}</span>
-          <ExternalLink className="size-3 shrink-0 text-fd-muted-foreground" />
+          <span className="inline-flex items-center gap-1 text-left">
+            <span className={docsActionIconClasses}>{item.icon}</span>
+            <span className="underline-offset-4 group-hover:underline group-focus-visible:underline">
+              {item.title}
+            </span>
+          </span>
+          <span className={cn(docsActionIconClasses, "ml-0.5")}>
+            <ExternalLink />
+          </span>
         </a>
       ))}
     </>
