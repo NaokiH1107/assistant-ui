@@ -1,5 +1,11 @@
 # @assistant-ui/react-langgraph
 
+## 0.7.5
+
+### Patch Changes
+
+- bcb4636: feat(react-langgraph): add "file" content type (filename, file_data) with round-trip mapping
+
 ## 0.7.4
 
 ### Patch Changes
