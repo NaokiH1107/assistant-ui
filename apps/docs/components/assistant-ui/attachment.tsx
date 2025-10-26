@@ -2,13 +2,11 @@
 
 import { PropsWithChildren, useEffect, useState, type FC } from "react";
 import Image from "next/image";
-import { XIcon, PlusIcon, FileText } from "lucide-react";
 import {
   AttachmentPrimitive,
   ComposerPrimitive,
   MessagePrimitive,
   useAssistantState,
-  useAssistantApi,
 } from "@assistant-ui/react";
 import { useShallow } from "zustand/shallow";
 import {
@@ -22,7 +20,6 @@ import {
   DialogContent,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { TooltipIconButton } from "@/components/assistant-ui/tooltip-icon-button";
 import { cn } from "@/lib/utils";
 
@@ -109,47 +106,12 @@ const AttachmentPreviewDialog: FC<PropsWithChildren> = ({ children }) => {
   );
 };
 
-const AttachmentThumb: FC = () => {
-  const isImage = useAssistantState(
-    ({ attachment }) => attachment.type === "image",
-  );
-  const src = useAttachmentSrc();
-
-  return (
-    <Avatar className="aui-attachment-tile-avatar h-full w-full rounded-none">
-      <AvatarImage
-        src={src}
-        alt="Attachment preview"
-        className="aui-attachment-tile-image object-cover"
-      />
-      <AvatarFallback delayMs={isImage ? 200 : 0}>
-        <FileText className="aui-attachment-tile-fallback-icon size-8 text-muted-foreground" />
-      </AvatarFallback>
-    </Avatar>
-  );
-};
 
 const AttachmentUI: FC = () => {
-  const api = useAssistantApi();
-  const isComposer = api.attachment.source === "composer";
 
   const isImage = useAssistantState(
     ({ attachment }) => attachment.type === "image",
   );
-  const typeLabel = useAssistantState(({ attachment }) => {
-    const type = attachment.type;
-    switch (type) {
-      case "image":
-        return "Image";
-      case "document":
-        return "Document";
-      case "file":
-        return "File";
-      default:
-        const _exhaustiveCheck: never = type;
-        throw new Error(`Unknown attachment type: ${_exhaustiveCheck}`);
-    }
-  });
 
   return (
     <Tooltip>
@@ -162,21 +124,8 @@ const AttachmentUI: FC = () => {
       >
         <AttachmentPreviewDialog>
           <TooltipTrigger asChild>
-            <div
-              className={cn(
-                "aui-attachment-tile size-14 cursor-pointer overflow-hidden rounded-[14px] border bg-muted transition-opacity hover:opacity-75",
-                isComposer &&
-                  "aui-attachment-tile-composer border-foreground/20",
-              )}
-              role="button"
-              id="attachment-tile"
-              aria-label={`${typeLabel} attachment`}
-            >
-              <AttachmentThumb />
-            </div>
           </TooltipTrigger>
         </AttachmentPreviewDialog>
-        {isComposer && <AttachmentRemove />}
       </AttachmentPrimitive.Root>
       <TooltipContent side="top">
         <AttachmentPrimitive.Name />
@@ -185,19 +134,6 @@ const AttachmentUI: FC = () => {
   );
 };
 
-const AttachmentRemove: FC = () => {
-  return (
-    <AttachmentPrimitive.Remove asChild>
-      <TooltipIconButton
-        tooltip="Remove file"
-        className="aui-attachment-tile-remove absolute top-1.5 right-1.5 size-3.5 rounded-full bg-white text-muted-foreground opacity-100 shadow-sm hover:!bg-white [&_svg]:text-black hover:[&_svg]:text-destructive"
-        side="top"
-      >
-        <XIcon className="aui-attachment-remove-icon size-3 dark:stroke-[2.5px]" />
-      </TooltipIconButton>
-    </AttachmentPrimitive.Remove>
-  );
-};
 
 export const UserMessageAttachments: FC = () => {
   return (
@@ -228,7 +164,6 @@ export const ComposerAddAttachment: FC = () => {
         className="aui-composer-add-attachment size-[34px] rounded-full p-1 text-xs font-semibold hover:bg-muted-foreground/15 dark:border-muted-foreground/15 dark:hover:bg-muted-foreground/30"
         aria-label="Add Attachment"
       >
-        <PlusIcon className="aui-attachment-add-icon size-5 stroke-[1.5px]" />
       </TooltipIconButton>
     </ComposerPrimitive.AddAttachment>
   );

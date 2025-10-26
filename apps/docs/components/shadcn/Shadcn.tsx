@@ -1,6 +1,7 @@
 "use client";
 
 import { MenuIcon, ShareIcon } from "lucide-react";
+// ...existing code...
 import type { TooltipContentProps } from "@radix-ui/react-tooltip";
 import Image from "next/image";
 import { ComponentPropsWithRef, type FC } from "react";
@@ -41,12 +42,15 @@ const ButtonWithTooltip: FC<ButtonWithTooltipProps> = ({
 const TopLeft: FC = () => {
   return (
     <div className="flex h-full w-full items-center gap-2 px-3 text-sm font-semibold">
-      <Image
-        src={icon}
-        alt="logo"
-        className="inline size-4 dark:hue-rotate-180 dark:invert"
-      />
-      <span>assistant-ui</span>
+      <button
+        type="button"
+        className="flex items-center justify-center rounded-md border border-muted bg-background px-2 py-1 text-muted-foreground"
+        aria-label="Menu"
+        style={{ width: 32, height: 32 }}
+      >
+        <MenuIcon className="size-5" />
+      </button>
+      <span>GPT</span>
     </div>
   );
 };
@@ -61,7 +65,7 @@ const LeftBarSheet: FC = () => {
       <SheetTrigger asChild>
         <Button variant="outline" size="icon" className="shrink-0 md:hidden">
           <MenuIcon className="size-4" />
-          <span className="sr-only">Toggle navigation menu</span>
+          <span className="sr-only"> navigToggleation menu</span>
         </Button>
       </SheetTrigger>
       <SheetContent side="left" className="flex flex-col">
@@ -76,15 +80,14 @@ const LeftBarSheet: FC = () => {
 
 const Header: FC = () => {
   return (
-    <header className="flex gap-2">
-      <LeftBarSheet />
+    <header className="flex items-center gap-2 justify-end w-full">
       <ModelPicker />
       <ButtonWithTooltip
         variant="outline"
         size="icon"
         tooltip="Share"
         side="bottom"
-        className="ml-auto shrink-0"
+        className="shrink-0"
       >
         <ShareIcon className="size-4" />
       </ButtonWithTooltip>
