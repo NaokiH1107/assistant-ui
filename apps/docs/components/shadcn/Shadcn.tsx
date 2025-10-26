@@ -134,7 +134,7 @@ export const Shadcn = () => {
         )}
         {/* 2. チャット入力画面 */}
         <div className="overflow-hidden bg-background">
-          <Thread />
+          <Thread sidebarOpen={sidebarOpen} />
         </div>
       </div>
     </div>

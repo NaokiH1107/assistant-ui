@@ -35,7 +35,7 @@ import {
 
 import { cn } from "@/lib/utils";
 
-export const Thread: FC = () => {
+export const Thread: FC<{ sidebarOpen?: boolean }> = ({ sidebarOpen }) => {
   return (
     <LazyMotion features={domAnimation}>
       <MotionConfig reducedMotion="user">
@@ -62,6 +62,13 @@ export const Thread: FC = () => {
               <div className="aui-thread-viewport-spacer min-h-8 grow" />
             </ThreadPrimitive.If>
 
+            {/* チャット入力ボックスのすぐ上に左端揃えでボタン配置 */}
+            <div className="flex gap-2 pb-2 mx-auto w-full max-w-[var(--thread-max-width)]">
+              {!sidebarOpen && (
+                <Button variant="outline" className="min-w-[120px]">新規チャット</Button>
+              )}
+              <Button variant="outline" className="min-w-[120px]">テンプレート呼び出し</Button>
+            </div>
             <Composer />
           </ThreadPrimitive.Viewport>
         </ThreadPrimitive.Root>
