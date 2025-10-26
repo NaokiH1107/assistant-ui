@@ -5,6 +5,7 @@ import { MenuIcon, ShareIcon } from "lucide-react";
 import type { TooltipContentProps } from "@radix-ui/react-tooltip";
 import Image from "next/image";
 import { ComponentPropsWithRef, type FC } from "react";
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -78,7 +79,11 @@ const LeftBarSheet: FC = () => {
   );
 };
 
-const Header: FC = () => {
+type HeaderProps = {
+  onMenuClick: () => void;
+};
+
+const Header: FC<HeaderProps> = ({ onMenuClick }) => {
   return (
     <header className="flex items-center gap-2 px-3 border-b bg-white w-full h-16">
       <button
@@ -86,6 +91,7 @@ const Header: FC = () => {
         className="flex items-center justify-center rounded-md border border-muted bg-background px-2 py-1 text-muted-foreground"
         aria-label="Menu"
         style={{ width: 32, height: 32 }}
+        onClick={onMenuClick}
       >
         <MenuIcon className="size-5" />
       </button>
@@ -110,13 +116,23 @@ export const Shadcn = () => {
   const topStyle = "border-b";
   const leftStyle = "border-r hidden md:block";
 
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+
   return (
     <div className="flex flex-col h-full w-full">
-      <Header />
-      <div className="grid flex-1 w-full grid-flow-col grid-rows-1 md:grid-cols-[250px_1fr]">
-        <div className={cn(sideStyle, leftStyle, "overflow-y-auto")}> 
-          <MainLeft />
-        </div>
+      <Header onMenuClick={() => setSidebarOpen((v) => !v)} />
+      {/* 画面下部: 1=履歴サイドバー画面, 2=チャット入力画面 */}
+      <div
+        className="grid flex-1 w-full grid-flow-col grid-rows-1"
+        style={{ gridTemplateColumns: sidebarOpen ? '250px 1fr' : '1fr' }}
+      >
+        {/* 1. 履歴サイドバー画面 */}
+        {sidebarOpen && (
+          <div className={cn(sideStyle, leftStyle, "overflow-y-auto")}> 
+            <MainLeft />
+          </div>
+        )}
+        {/* 2. チャット入力画面 */}
         <div className="overflow-hidden bg-background">
           <Thread />
         </div>
