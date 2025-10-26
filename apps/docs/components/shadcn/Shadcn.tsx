@@ -80,7 +80,17 @@ const LeftBarSheet: FC = () => {
 
 const Header: FC = () => {
   return (
-    <header className="flex items-center gap-2 justify-end w-full">
+    <header className="flex items-center gap-2 px-3 border-b bg-white w-full h-16">
+      <button
+        type="button"
+        className="flex items-center justify-center rounded-md border border-muted bg-background px-2 py-1 text-muted-foreground"
+        aria-label="Menu"
+        style={{ width: 32, height: 32 }}
+      >
+        <MenuIcon className="size-5" />
+      </button>
+      <span className="font-semibold text-sm">GPT</span>
+      <div className="flex-1" />
       <ModelPicker />
       <ButtonWithTooltip
         variant="outline"
@@ -101,18 +111,15 @@ export const Shadcn = () => {
   const leftStyle = "border-r hidden md:block";
 
   return (
-    <div className="grid h-full w-full grid-flow-col grid-rows-[auto_1fr] md:grid-cols-[250px_1fr]">
-      <div className={cn(sideStyle, leftStyle, topStyle)}>
-        <TopLeft />
-      </div>
-      <div className={cn(sideStyle, leftStyle, "overflow-y-auto")}>
-        <MainLeft />
-      </div>
-      <div className={cn(sideStyle, topStyle)}>
-        <Header />
-      </div>
-      <div className="overflow-hidden bg-background">
-        <Thread />
+    <div className="flex flex-col h-full w-full">
+      <Header />
+      <div className="grid flex-1 w-full grid-flow-col grid-rows-1 md:grid-cols-[250px_1fr]">
+        <div className={cn(sideStyle, leftStyle, "overflow-y-auto")}> 
+          <MainLeft />
+        </div>
+        <div className="overflow-hidden bg-background">
+          <Thread />
+        </div>
       </div>
     </div>
   );
