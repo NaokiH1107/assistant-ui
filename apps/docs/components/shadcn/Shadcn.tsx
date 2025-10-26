@@ -97,7 +97,9 @@ const Header: FC<HeaderProps> = ({ onMenuClick }) => {
       </button>
       <span className="font-semibold text-sm">GPT</span>
       <div className="flex-1" />
-      <ModelPicker />
+      <div style={{ minWidth: 120, maxWidth: 180, width: '50%' }}>
+        <ModelPicker />
+      </div>
       <Button
         variant="outline"
         size="icon"
