@@ -1,6 +1,6 @@
 "use client";
 
-import { MenuIcon, ShareIcon } from "lucide-react";
+import { MenuIcon, SettingsIcon } from "lucide-react";
 // ...existing code...
 import type { TooltipContentProps } from "@radix-ui/react-tooltip";
 import Image from "next/image";
@@ -98,15 +98,14 @@ const Header: FC<HeaderProps> = ({ onMenuClick }) => {
       <span className="font-semibold text-sm">GPT</span>
       <div className="flex-1" />
       <ModelPicker />
-      <ButtonWithTooltip
+      <Button
         variant="outline"
         size="icon"
-        tooltip="Share"
-        side="bottom"
         className="shrink-0"
+        aria-label="Settings"
       >
-        <ShareIcon className="size-4" />
-      </ButtonWithTooltip>
+        <SettingsIcon className="size-4" />
+      </Button>
     </header>
   );
 };
