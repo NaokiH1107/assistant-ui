@@ -102,16 +102,7 @@ const ThreadWelcome: FC = () => {
             exit={{ opacity: 0, y: 10 }}
             className="aui-thread-welcome-message-motion-1 text-2xl font-semibold"
           >
-            Hello there!
-          </m.div>
-          <m.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 10 }}
-            transition={{ delay: 0.1 }}
-            className="aui-thread-welcome-message-motion-2 text-2xl text-muted-foreground/65"
-          >
-            How can I help you today?
+            こんにちは。何かお手伝いできることはありますか？
           </m.div>
         </div>
       </div>
