@@ -69,19 +69,19 @@ const MainLeft: FC = () => {
       {/* サイドバー下部のボタン/リンク群 */}
       <div className="flex flex-col gap-2 pt-4 pb-2">
         {/* 次の30件を取得（青ボタン） */}
-        <Button variant="default" className="w-full bg-blue-500 hover:bg-blue-600 text-white font-normal text-base" aria-label="次の30件を取得">
+        <Button variant="default" className="w-full bg-blue-500 hover:bg-blue-600 text-white font-normal text-base text-center" aria-label="次の30件を取得">
           次の30件を取得
         </Button>
-        {/* GPTポータルサイト（青リンク） */}
-        <Button variant="ghost" className="w-full text-blue-600 hover:text-blue-700 font-normal text-base justify-start" aria-label="GPTポータルサイト">
+        {/* GPTポータルサイト（グレー背景・黒文字・中央揃え） */}
+        <Button variant="ghost" className="w-full bg-gray-200 hover:bg-gray-300 text-black font-normal text-base text-center justify-center" aria-label="GPTポータルサイト">
           GPTポータルサイト
         </Button>
-        {/* 生成AIガイドライン（オレンジリンク） */}
-        <Button variant="ghost" className="w-full text-orange-500 hover:text-orange-600 font-normal text-base justify-start" aria-label="生成AIガイドライン">
+        {/* 生成AIガイドライン（オレンジ背景・白文字・中央揃え） */}
+        <Button variant="ghost" className="w-full bg-orange-500 hover:bg-orange-600 text-white font-normal text-base text-center justify-center" aria-label="生成AIガイドライン">
           生成AIガイドライン
         </Button>
-        {/* 操作マニュアル（茶色リンク） */}
-        <Button variant="ghost" className="w-full text-amber-700 hover:text-amber-800 font-normal text-base justify-start" aria-label="操作マニュアル">
+        {/* 操作マニュアル（オレンジ背景・白文字・中央揃え） */}
+        <Button variant="ghost" className="w-full bg-orange-500 hover:bg-orange-600 text-white font-normal text-base text-center justify-center" aria-label="操作マニュアル">
           操作マニュアル
         </Button>
       </div>
