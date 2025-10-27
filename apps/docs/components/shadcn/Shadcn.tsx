@@ -57,7 +57,15 @@ const TopLeft: FC = () => {
 };
 
 const MainLeft: FC = () => {
-  return <ThreadList />;
+  return (
+    <div className="flex flex-col gap-2 pt-2">
+      {/* +新規チャットボタン サイドバー上部 */}
+      <Button variant="outline" className="w-full justify-start font-normal text-base" aria-label="新規チャット">
+        ＋新規チャット
+      </Button>
+      <ThreadList />
+    </div>
+  );
 };
 
 const LeftBarSheet: FC = () => {
