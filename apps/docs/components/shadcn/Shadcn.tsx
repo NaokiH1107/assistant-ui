@@ -126,8 +126,18 @@ const Header: FC<HeaderProps> = ({ onMenuClick }) => {
       </button>
       <span className="font-semibold text-sm">GPT</span>
       <div className="flex-1" />
-      <div style={{ minWidth: 120, maxWidth: 180, width: '50%' }}>
-        <ModelPicker />
+      <div className="flex items-center gap-2">
+        <Button
+          variant="ghost"
+          className="bg-yellow-100 text-black text-center font-normal px-4 py-2 rounded-md border border-yellow-200"
+          style={{ minWidth: 120 }}
+          aria-label="アンケートはこちら"
+        >
+          アンケートはこちら
+        </Button>
+        <div style={{ minWidth: 120, maxWidth: 180, width: '50%' }}>
+          <ModelPicker />
+        </div>
       </div>
       <Button
         variant="outline"
