@@ -58,12 +58,33 @@ const TopLeft: FC = () => {
 
 const MainLeft: FC = () => {
   return (
-    <div className="flex flex-col gap-2 pt-2">
+    <div className="flex flex-col gap-2 pt-2 h-full">
       {/* +新規チャットボタン サイドバー上部 */}
       <Button variant="outline" className="w-full justify-start font-normal text-base" aria-label="新規チャット">
         ＋新規チャット
       </Button>
-      <ThreadList />
+      <div className="flex-1 min-h-0">
+        <ThreadList />
+      </div>
+      {/* サイドバー下部のボタン/リンク群 */}
+      <div className="flex flex-col gap-2 pt-4 pb-2">
+        {/* 次の30件を取得（青ボタン） */}
+        <Button variant="default" className="w-full bg-blue-500 hover:bg-blue-600 text-white font-normal text-base" aria-label="次の30件を取得">
+          次の30件を取得
+        </Button>
+        {/* GPTポータルサイト（青リンク） */}
+        <Button variant="ghost" className="w-full text-blue-600 hover:text-blue-700 font-normal text-base justify-start" aria-label="GPTポータルサイト">
+          GPTポータルサイト
+        </Button>
+        {/* 生成AIガイドライン（オレンジリンク） */}
+        <Button variant="ghost" className="w-full text-orange-500 hover:text-orange-600 font-normal text-base justify-start" aria-label="生成AIガイドライン">
+          生成AIガイドライン
+        </Button>
+        {/* 操作マニュアル（茶色リンク） */}
+        <Button variant="ghost" className="w-full text-amber-700 hover:text-amber-800 font-normal text-base justify-start" aria-label="操作マニュアル">
+          操作マニュアル
+        </Button>
+      </div>
     </div>
   );
 };
