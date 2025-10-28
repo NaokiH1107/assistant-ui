@@ -59,28 +59,22 @@ const TopLeft: FC = () => {
 const MainLeft: FC = () => {
   return (
     <div className="flex flex-col gap-2 pt-2 h-full">
-      {/* +新規チャットボタン サイドバー上部 */}
-      <Button variant="outline" className="w-full justify-start font-normal text-base" aria-label="新規チャット">
-        ＋新規チャット
-      </Button>
-      <div className="flex-1 min-h-0">
+      {/* + New Threadボタン サイドバー上部 */}
+      <div className="mb-2">
+        {/* ThreadListが+ New Threadボタンを含む場合はこの行を削除 */}
         <ThreadList />
       </div>
       {/* サイドバー下部のボタン/リンク群 */}
-      <div className="flex flex-col gap-2 pt-4 pb-2">
-        {/* 次の30件を取得（青ボタン） */}
+      <div className="flex flex-col gap-2 pt-4 pb-2 mt-auto">
         <Button variant="default" className="w-full bg-blue-500 hover:bg-blue-600 text-white font-normal text-base text-center" aria-label="次の30件を取得">
           次の30件を取得
         </Button>
-        {/* GPTポータルサイト（グレー背景・黒文字・中央揃え） */}
         <Button variant="ghost" className="w-full bg-gray-200 hover:bg-gray-300 text-black font-normal text-base text-center justify-center" aria-label="GPTポータルサイト">
           GPTポータルサイト
         </Button>
-        {/* 生成AIガイドライン（オレンジ背景・白文字・中央揃え） */}
         <Button variant="ghost" className="w-full bg-orange-500 hover:bg-orange-600 text-white font-normal text-base text-center justify-center" aria-label="生成AIガイドライン">
           生成AIガイドライン
         </Button>
-        {/* 操作マニュアル（オレンジ背景・白文字・中央揃え） */}
         <Button variant="ghost" className="w-full bg-orange-500 hover:bg-orange-600 text-white font-normal text-base text-center justify-center" aria-label="操作マニュアル">
           操作マニュアル
         </Button>
